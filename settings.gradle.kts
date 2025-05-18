@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Ascendia"
 include(":app")
+include(":data")
+include(":domain")
