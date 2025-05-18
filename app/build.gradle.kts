@@ -12,7 +12,7 @@ plugins {
 
 android {
     namespace = "com.crowns.ascendia"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.crowns.ascendia"
