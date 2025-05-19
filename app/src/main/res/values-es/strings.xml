@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ascendia</string>
+    <string name="auth_signin_button">Iniciar sesión</string>
+    <string name="welcome">Hola</string>
+    <string name="btn_sign_up">Registrate</string>
+    <string name="auth_email_hint">Correo electrónico</string>
+    <string name="auth_password_hint">Contraseña</string>
+    <string name="auth_no_account_signup">¿No tienes cuenta? Regístrate</string>
+</resources>

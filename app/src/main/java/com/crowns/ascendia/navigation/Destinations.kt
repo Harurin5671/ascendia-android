@@ -7,3 +7,12 @@ object Home
 
 @Serializable
 object Auth
+
+@Serializable
+object SignIn
+
+@Serializable
+object SignUp
+
+@Serializable
+object ForgotPassword

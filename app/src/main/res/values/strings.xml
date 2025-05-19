@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Ascendia</string>
+    <string name="auth_signin_button">Sign in</string>
+    <string name="welcome">Hello</string>
+    <string name="btn_sign_up">Sign up</string>
+    <string name="auth_email_hint">E-mail address</string>
+    <string name="auth_password_hint">Password</string>
+    <string name="auth_no_account_signup">Don\'t have an account? Register</string>
 </resources>
