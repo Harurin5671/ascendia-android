@@ -8,4 +8,14 @@
     <string name="auth_no_account_signup">Don\'t have an account? Register</string>
     <string name="auth_welcome_title">Hi, Welcome 👋🏻</string>
     <string name="auth_forgot_password">Forgot password?</string>
-    /.;</resources>
+    <string name="auth_invalid_email">Invalid mail.</string>
+    <string name="auth_password_format_invalid">The password must contain at least one capital letter, one number and one special character.</string>
+    <string name="auth_password_too_short">Minimum 8 characters.</string>
+    <string name="auth_email_empty">The e-mail cannot be empty.</string>
+    <string name="auth_password_empty">The password cannot be empty.</string>
+    <!-- Navegación -->
+    <string name="back_button">Back</string>
+    <!-- Contraseña -->
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+</resources>

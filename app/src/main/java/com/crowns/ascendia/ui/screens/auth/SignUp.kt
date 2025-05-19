@@ -6,8 +6,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.crowns.ascendia.ui.components.appbar.AppTopBar
 
 @Composable
 fun SignUpScreen() {
-    Scaffold { it -> Column(modifier = Modifier.padding(it)) { Text(text = "Sign Up") } }
+    Scaffold(topBar = {
+        AppTopBar(
+            title = "",
+            showBackButton = true,
+            modifier = Modifier
+        )
+    }) { it -> Column(modifier = Modifier.padding(it)) { Text(text = "Sign Up") } }
 }

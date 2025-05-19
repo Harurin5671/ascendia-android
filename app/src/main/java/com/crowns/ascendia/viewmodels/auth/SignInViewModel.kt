@@ -1,6 +1,12 @@
 package com.crowns.ascendia.viewmodels.auth
 
 import androidx.lifecycle.ViewModel
+import com.crowns.ascendia.R
+import com.crowns.ascendia.domain.validation.auth.AuthValidationError
+import com.crowns.ascendia.domain.validation.auth.AuthValidator
+import com.crowns.ascendia.util.ResourceProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +20,10 @@ data class SignInUiState(
     val passwordError: String? = null,
 )
 
-class SignInViewModel: ViewModel() {
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val resourceProvider: ResourceProvider
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SignInUiState())
     val uiState: StateFlow<SignInUiState> = _uiState.asStateFlow()
 
@@ -27,31 +36,31 @@ class SignInViewModel: ViewModel() {
     }
 
     fun validate(): Boolean {
-        print("Validando")
-        var isValid = true
-        var emailError: String? = null
-        var passwordError: String? = null
+        val emailError = AuthValidator.validateEmail(_uiState.value.email)
+        val passwordError = AuthValidator.validatePassword(_uiState.value.password)
 
-        if(!android.util.Patterns.EMAIL_ADDRESS.matcher(_uiState.value.email).matches()) {
-            emailError = "Correo inválido"
-            isValid = false
-        }
-
-        if (_uiState.value.password.length < 8) {
-            passwordError = "Mínimo 6 caracteres"
-            isValid = false
-        }
+        val isValid = emailError == null && passwordError == null
 
         _uiState.value = _uiState.value.copy(
-            emailError = emailError,
-            passwordError = passwordError,
+            emailError = emailError?.let { getErrorMessage(it) },
+            passwordError = passwordError?.let { getErrorMessage(it) },
             isSignInEnabled = isValid
         )
 
         return isValid
     }
 
-    fun onSignInClick() {
-        if(validate()) {}
+    fun onSignInClick(): Boolean {
+        return validate()
+    }
+
+    private fun getErrorMessage(error: AuthValidationError): String {
+        return when (error) {
+            AuthValidationError.EMPTY_EMAIL -> resourceProvider.getString(R.string.auth_email_empty)
+            AuthValidationError.INVALID_EMAIL -> resourceProvider.getString(R.string.auth_invalid_email)
+            AuthValidationError.EMPTY_PASSWORD -> resourceProvider.getString(R.string.auth_password_empty)
+            AuthValidationError.PASSWORD_TOO_SHORT -> resourceProvider.getString(R.string.auth_password_too_short)
+            AuthValidationError.PASSWORD_FORMAT_INVALID -> resourceProvider.getString(R.string.auth_password_format_invalid)
+        }
     }
 }

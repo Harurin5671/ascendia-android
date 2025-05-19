@@ -1,6 +1,7 @@
 package com.crowns.ascendia.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -13,12 +14,15 @@ import com.crowns.ascendia.ui.screens.home.HomeScreen
 @Composable
 fun RootNavigator() {
     val navController = rememberNavController()
+    val appNavigator = remember(navController){
+        DefaultAppNavigator(navController)
+    }
     NavHost(navController = navController, startDestination = Auth) {
         navigation<Auth>(startDestination = SignIn) {
-            composable<SignIn> { SignInScreen(navController) }
+            composable<SignIn> { SignInScreen(appNavigator) }
             composable<SignUp> { SignUpScreen() }
             composable<ForgotPassword> { ForgotPasswordScreen() }
         }
-        composable<Home> { HomeScreen(navController) }
+        composable<Home> { HomeScreen(appNavigator) }
     }
 }

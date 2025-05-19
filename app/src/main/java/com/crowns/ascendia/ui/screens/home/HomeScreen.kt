@@ -6,9 +6,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import com.crowns.ascendia.navigation.AppNavigator
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(appNavigator: AppNavigator) {
     Scaffold { it -> Column(modifier = Modifier.padding(it)) { Text(text = "Home") } }
 }

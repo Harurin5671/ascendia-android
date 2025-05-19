@@ -20,7 +20,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,19 +28,24 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.crowns.ascendia.R
+import com.crowns.ascendia.navigation.AppNavigator
+import com.crowns.ascendia.navigation.Auth
+import com.crowns.ascendia.navigation.ForgotPassword
+import com.crowns.ascendia.navigation.Home
 import com.crowns.ascendia.navigation.SignUp
+import com.crowns.ascendia.ui.components.appbar.AppTopBar
 import com.crowns.ascendia.ui.components.inputs.BaseTextField
 import com.crowns.ascendia.ui.components.inputs.PasswordTextField
 import com.crowns.ascendia.viewmodels.auth.SignInViewModel
 
 @Composable
-fun SignInScreen(navController: NavController) {
-    val viewModel = remember { SignInViewModel() }
+fun SignInScreen(appNavigator: AppNavigator) {
+    val viewModel: SignInViewModel = hiltViewModel()
+//    val viewModel = remember { SignInViewModel() }
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
     val scrollState = rememberScrollState()
@@ -94,20 +98,27 @@ fun SignInScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                stringResource(R.string.auth_forgot_password),
-                fontSize = 14.sp,
-                textAlign = TextAlign.End,
-                modifier = Modifier.fillMaxWidth()
-            )
+            TextButton(
+                onClick = {
+                    appNavigator.navigate(ForgotPassword)
+                },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text(stringResource(R.string.auth_forgot_password))
+            }
 
             Spacer(modifier = Modifier.height(40.dp))
 
-
             Button(
                 onClick = {
-                    viewModel.onSignInClick()
                     focusManager.clearFocus()
+                    if (viewModel.onSignInClick()) {
+                        appNavigator.navigate(
+                            to = Home,
+                            popUpTo = Auth,
+                            inclusive = true
+                        )
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     disabledContainerColor = Color(0xFFB88AE8)
@@ -127,7 +138,7 @@ fun SignInScreen(navController: NavController) {
 
             TextButton(
                 onClick = {
-                    navController.navigate(SignUp)
+                    appNavigator.navigate(SignUp)
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
