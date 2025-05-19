@@ -2,39 +2,49 @@ package com.crowns.ascendia.ui.screens.auth
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.crowns.ascendia.R
 import com.crowns.ascendia.navigation.SignUp
+import com.crowns.ascendia.ui.components.inputs.BaseTextField
+import com.crowns.ascendia.ui.components.inputs.PasswordTextField
+import com.crowns.ascendia.viewmodels.auth.SignInViewModel
 
 @Composable
 fun SignInScreen(navController: NavController) {
+    val viewModel = remember { SignInViewModel() }
+    val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val scrollState = rememberScrollState()
 
     Scaffold { paddding ->
         Column(
@@ -42,39 +52,77 @@ fun SignInScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(paddding)
                 .padding(16.dp)
+                .imePadding()
+                .verticalScroll(scrollState)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = { focusManager.clearFocus() })
                 },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text(text = stringResource(R.string.auth_email_hint)) },
-                singleLine = true,
+            Text(
+                stringResource(R.string.auth_welcome_title),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.ExtraBold,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text(stringResource(R.string.auth_password_hint)) },
-                visualTransformation = PasswordVisualTransformation(),
-                singleLine = true,
+            BaseTextField(
+                value = uiState.email,
+                onValueChange = { viewModel.onEmailChange(it) },
+                label = stringResource(R.string.auth_email_hint),
+                placeholder = stringResource(R.string.auth_email_hint),
+                modifier = Modifier.fillMaxWidth(),
+                keyBoardType = KeyboardType.Email,
+                isError = uiState.emailError != null,
+                errorMessage = uiState.emailError,
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            PasswordTextField(
+                value = uiState.password,
+                onValueChange = { viewModel.onPasswordChange(it) },
+                label = stringResource(R.string.auth_password_hint),
+                placeholder = stringResource(R.string.auth_password_hint),
+                modifier = Modifier.fillMaxWidth(),
+                isError = uiState.passwordError != null,
+                errorMessage = uiState.passwordError
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                stringResource(R.string.auth_forgot_password),
+                fontSize = 14.sp,
+                textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
 
             Button(
                 onClick = {
-                    // Aquí llamas a tu lógica de login (ej: viewModel.login(email, password))
-                    focusManager.clearFocus() // opcional
+                    viewModel.onSignInClick()
+                    focusManager.clearFocus()
                 },
-                modifier = Modifier.fillMaxWidth()
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = Color(0xFFB88AE8)
+                ),
+                enabled = uiState.email != "" && uiState.password != "",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Text(stringResource(R.string.auth_signin_button))
+                Text(
+                    text = stringResource(R.string.auth_signin_button),
+                    fontSize = 16.sp,
+                    color = Color.White
+                )
             }
 
             TextButton(

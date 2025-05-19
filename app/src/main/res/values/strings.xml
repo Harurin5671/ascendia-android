@@ -6,4 +6,6 @@
     <string name="auth_email_hint">E-mail address</string>
     <string name="auth_password_hint">Password</string>
     <string name="auth_no_account_signup">Don\'t have an account? Register</string>
-</resources>
+    <string name="auth_welcome_title">Hi, Welcome 👋🏻</string>
+    <string name="auth_forgot_password">Forgot password?</string>
+    /.;</resources>
